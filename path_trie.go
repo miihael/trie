@@ -120,6 +120,17 @@ func (trie *PathTrie) Walk(prefix string, walker WalkFunc) error {
 	return trie.walk(prefix, walker)
 }
 
+func (trie *PathTrie) WalkChilds(prefix string, walker WalkFunc) error {
+	for part, child := range trie.children {
+		if child.value != nil {
+			if err := walker(prefix+part, child.value); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 // WalkPath iterates over each key/value in the path in trie from the root to
 // the node at the given key, calling the given walker function for each
 // key/value. If the walker function returns an error, the walk is aborted.
