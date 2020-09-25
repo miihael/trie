@@ -121,7 +121,14 @@ func (trie *PathTrie) Walk(prefix string, walker WalkFunc) error {
 }
 
 func (trie *PathTrie) WalkChilds(prefix string, walker WalkFunc) error {
-	for part, child := range trie.children {
+	node := trie
+	for part, i := trie.segmenter(prefix, 0); part != ""; part, i = trie.segmenter(prefix, i) {
+		node = node.children[part]
+		if node == nil {
+			return nil
+		}
+	}
+	for part, child := range node.children {
 		if child.value != nil {
 			if err := walker(prefix+part, child.value); err != nil {
 				return err
