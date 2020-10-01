@@ -129,10 +129,8 @@ func (trie *PathTrie) WalkChilds(prefix string, walker WalkFunc) error {
 		}
 	}
 	for part, child := range node.children {
-		if child.value != nil {
-			if err := walker(prefix+part, child.value); err != nil {
-				return err
-			}
+		if err := walker(prefix+part, child.value); err != nil {
+			return err
 		}
 	}
 	return nil
